@@ -1,36 +1,39 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>@yield('title', 'Ponto Eletrônico')</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    @stack('styles')
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
+  <div class="container">
+    <a class="navbar-brand" href="{{ url('/') }}">Ponto</a>
+    <div class="">
+      @auth
+        <span class="me-2">Olá, {{ auth()->user()->name }}</span>
+        @if(auth()->user()->isAdmin())
+          <a href="{{ route('employees.index') }}" class="btn btn-sm btn-primary me-2">Funcionários</a>
+        @endif
+        <form method="POST" action="{{ route('logout') }}" class="d-inline">
+          @csrf
+          <button class="btn btn-sm btn-danger">Sair</button>
+        </form>
+      @else
+        <a href="{{ route('login') }}" class="btn btn-sm btn-outline-primary">Login</a>
+      @endauth
+    </div>
+  </div>
+</nav>
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+<div class="container">
+    @includeWhen(session('success'), 'partials.alerts')
+    @yield('content')
+</div>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
-
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
-
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
-        </div>
-    </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+@stack('scripts')
+</body>
 </html>
