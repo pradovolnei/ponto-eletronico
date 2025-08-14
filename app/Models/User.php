@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'cpf','cargo','birth_date','cep','street','number',
+        'complement','neighborhood','city','state','manager_id','role'
     ];
 
     /**
@@ -43,6 +45,23 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'birth_date' => 'date',
         ];
+    }
+
+    // Relacionamentos
+    public function manager()
+    {
+        return $this->belongsTo(User::class, 'manager_id');
+    }
+
+    public function subordinates()
+    {
+        return $this->hasMany(User::class, 'manager_id');
+    }
+
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
     }
 }
