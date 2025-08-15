@@ -16,6 +16,7 @@
         <span class="me-2">Olá, {{ auth()->user()->name }}</span>
         @if(auth()->user()->isAdmin())
           <a href="{{ route('employees.index') }}" class="btn btn-sm btn-primary me-2">Funcionários</a>
+          <a href="{{ route('reports.index') }}" class="btn btn-sm btn-info">Relatórios</a>
         @endif
         <form method="POST" action="{{ route('logout') }}" class="d-inline">
           @csrf
