@@ -60,6 +60,11 @@ class User extends Authenticatable
         return $this->hasMany(User::class, 'manager_id');
     }
 
+    public function punches()
+    {
+        return $this->hasMany(Punch::class);
+    }
+
     public function isAdmin()
     {
         return $this->role === 'admin';
