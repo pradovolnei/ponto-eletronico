@@ -7,12 +7,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReportController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('dashboard');
 });
-
-/*Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');*/
 
 Route::get('/dashboard', [\App\Http\Controllers\PunchController::class, 'index'])
     ->middleware(['auth'])

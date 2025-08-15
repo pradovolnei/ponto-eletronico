@@ -23,6 +23,11 @@
     </div>
 
     <div class="mb-3">
+        <label>Senha</label>
+        <input type="password" name="password" class="form-control" value="" >
+    </div>
+
+    <div class="mb-3">
         <label>Cargo</label>
         <input type="text" name="cargo" class="form-control" value="{{ old('cargo', $employee->cargo) }}" required>
     </div>
