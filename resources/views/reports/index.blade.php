@@ -38,7 +38,7 @@
                 <td>{{ $r->cargo }}</td>
                 <td>{{ $r->idade }}</td>
                 <td>{{ $r->gestor }}</td>
-                <td>{{ $r->data_hora }}</td>
+                <td>{{ date("d/m/Y H:i", strtotime($r->data_hora)) }}</td>
             </tr>
         @endforeach
     </tbody>
