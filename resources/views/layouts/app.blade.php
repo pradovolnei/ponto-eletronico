@@ -14,6 +14,7 @@
     <div class="">
       @auth
         <span class="me-2">Olá, {{ auth()->user()->name }}</span>
+        <a href="{{ route('profile.password.edit') }}" class="btn btn-sm btn-outline-secondary me-2">Senha</a>
         @if(auth()->user()->isAdmin())
           <a href="{{ route('employees.index') }}" class="btn btn-sm btn-primary me-2">Funcionários</a>
           <a href="{{ route('reports.index') }}" class="btn btn-sm btn-info">Relatórios</a>
