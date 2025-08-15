@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PunchController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ReportController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,6 +33,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('admin')->group(function () {
         Route::resource('employees', EmployeeController::class);
+        Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
     });
 
 require __DIR__.'/auth.php';
