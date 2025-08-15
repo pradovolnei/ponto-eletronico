@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class ProfileController extends Controller
 {
@@ -27,15 +28,25 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        try {
+            $user = $request->user();
+            $user->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+            if ($user->isDirty('email')) {
+                $user->email_verified_at = null;
+            }
+
+            $user->save();
+
+            return Redirect::route('profile.edit')->with('status', 'profile-updated');
+
+        } catch (\Exception $e) {
+            // Loga o erro para depuração
+            Log::error('Erro ao atualizar o perfil do usuário: ' . $e->getMessage());
+
+            // Redireciona de volta com uma mensagem de erro
+            return Redirect::back()->withInput()->withErrors(['error' => 'Ocorreu um erro ao atualizar seu perfil. Por favor, tente novamente.']);
         }
-
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
     /**
@@ -66,20 +77,27 @@ class ProfileController extends Controller
 
     public function updatePassword(Request $request)
     {
-        $request->validate([
-            'current_password' => 'required',
-            'password' => 'required|confirmed|min:8',
-        ]);
+        try {
+            $request->validate([
+                'current_password' => 'required',
+                'password' => 'required|confirmed|min:8',
+            ]);
 
-        $user = $request->user();
+            $user = $request->user();
 
-        if (! Hash::check($request->current_password, $user->password)) {
-            return back()->withErrors(['current_password' => 'Senha atual incorreta']);
+            if (!Hash::check($request->current_password, $user->password)) {
+                return back()->withErrors(['current_password' => 'Senha atual incorreta']);
+            }
+
+            $user->password = Hash::make($request->password);
+            $user->save();
+
+            return back()->with('success', 'Senha alterada com sucesso.');
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            return back()->with('error', 'Ocorreu um erro ao atualizar a senha. Por favor, tente novamente.');
         }
-
-        $user->password = Hash::make($request->password);
-        $user->save();
-
-        return back()->with('success','Senha alterada com sucesso.');
     }
 }

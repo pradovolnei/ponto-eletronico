@@ -16,13 +16,18 @@ class ReportController extends Controller
         $records = []; 
 
         try {
-            $where = '';
+            $where = "WHERE u.role = 'employee' ";
             $bindings = [];
 
-            if ($start && $end) {
-                $where = "WHERE p.created_at BETWEEN ? AND ?";
+            if ($start) {
+                $where .= "AND p.created_at >= ? ";
                 // Adiciona tempo para pegar todo o dia
                 $bindings[] = $start . ' 00:00:00';
+            }
+
+            if ($end) {
+                $where .= "AND p.created_at <= ? ";
+                // Adiciona tempo para pegar todo o dia
                 $bindings[] = $end . ' 23:59:59';
             }
 
