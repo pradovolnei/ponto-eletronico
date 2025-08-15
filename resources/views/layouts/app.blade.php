@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="pt-br">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
@@ -8,30 +8,40 @@
     @stack('styles')
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
-  <div class="container">
-    <a class="navbar-brand" href="{{ url('/') }}">Ponto</a>
-    <div class="">
-      @auth
-        <span class="me-2">Olá, {{ auth()->user()->name }}</span>
-        <a href="{{ route('profile.password.edit') }}" class="btn btn-sm btn-outline-secondary me-2">Senha</a>
-        @if(auth()->user()->isAdmin())
-          <a href="{{ route('employees.index') }}" class="btn btn-sm btn-primary me-2">Funcionários</a>
-          <a href="{{ route('reports.index') }}" class="btn btn-sm btn-info">Relatórios</a>
-        @endif
-        <form method="POST" action="{{ route('logout') }}" class="d-inline">
-          @csrf
-          <button class="btn btn-sm btn-danger">Sair</button>
-        </form>
-      @else
-        <a href="{{ route('login') }}" class="btn btn-sm btn-outline-primary">Login</a>
-      @endauth
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow-sm">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ url('/') }}">Ponto</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav ms-auto">
+                @auth
+                    <span class="nav-link text-white-50">Olá, {{ auth()->user()->name }}</span>
+                    <a href="{{ route('profile.password.edit') }}" class="nav-link">Alterar Senha</a>
+                    @if(auth()->user()->isAdmin())
+                        <a href="{{ route('employees.index') }}" class="nav-link">Funcionários</a>
+                        <a href="{{ route('reports.index') }}" class="nav-link">Relatórios</a>
+                    @endif
+                    <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                        @csrf
+                        <button class="btn btn-danger btn-sm ms-2">Sair</button>
+                    </form>
+                @else
+                    <a href="{{ route('login') }}" class="nav-link">Login</a>
+                @endauth
+            </div>
+        </div>
     </div>
-  </div>
 </nav>
 
-<div class="container">
-    @includeWhen(session('success'), 'partials.alerts')
+<div class="container py-4">
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
     @yield('content')
 </div>
 
